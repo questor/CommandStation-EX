@@ -5,10 +5,8 @@
 #include "RingStream.h"
 
 struct XpressNet {
-	
-	static void parse(Print *stream,  byte *command,  RingStream *ringStream);
 
-
+  static void parse(Print *stream, byte *command, RingStream *ringStream);
 };
 
 #endif

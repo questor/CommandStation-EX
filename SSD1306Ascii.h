@@ -22,26 +22,23 @@
 #define SSD1306Ascii_h
 
 #include "Arduino.h"
-#include "FSH.h"
 #include "Display.h"
+#include "FSH.h"
 
-#include "I2CManager.h"
 #include "DIAG.h"
 #include "DisplayInterface.h"
+#include "I2CManager.h"
 
 // Uncomment to remove lower-case letters to save 108 bytes of flash
-//#define NOLOWERCASE
-
-
+// #define NOLOWERCASE
 
 //------------------------------------------------------------------------------
 // Constructor
 class SSD1306AsciiWire : public DisplayDevice {
- public:
-
+public:
   // Constructors
   SSD1306AsciiWire(int width, int height); // Auto-detects I2C address
-  SSD1306AsciiWire(I2CAddress address, int width, int height);  
+  SSD1306AsciiWire(I2CAddress address, int width, int height);
 
   // Initialize the display controller.
   bool begin();
@@ -51,7 +48,7 @@ class SSD1306AsciiWire : public DisplayDevice {
 
   // Set cursor to start of specified text line
   void setRowNative(byte line) override;
-  
+
   // Write one character to OLED
   size_t writeNative(uint8_t c) override;
 
@@ -59,7 +56,7 @@ class SSD1306AsciiWire : public DisplayDevice {
   uint16_t getNumCols() { return m_charsPerRow; }
   uint16_t getNumRows() { return m_charsPerColumn; }
 
- private:
+private:
   // Cursor column.
   uint8_t m_col;
   // Cursor RAM row.
@@ -75,7 +72,7 @@ class SSD1306AsciiWire : public DisplayDevice {
   // Column offset RAM to SEG.
   uint8_t m_colOffset = 0;
   // Current font.
-  const uint8_t* const m_font = System6x8;
+  const uint8_t *const m_font = System6x8;
   // Flag to prevent calling begin() twice
   uint8_t m_initialised = false;
 
@@ -88,7 +85,7 @@ class SSD1306AsciiWire : public DisplayDevice {
   I2CAddress m_i2cAddr = 0;
 
   I2CRB requestBlock;
-  uint8_t outputBuffer[fontWidth+1];
+  uint8_t outputBuffer[fontWidth + 1];
 
   static const uint8_t blankPixels[];
 
@@ -97,4 +94,4 @@ class SSD1306AsciiWire : public DisplayDevice {
   static const uint8_t FLASH SH1106_132x64init[];
 };
 
-#endif  // SSD1306Ascii_h
+#endif // SSD1306Ascii_h

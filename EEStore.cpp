@@ -37,37 +37,37 @@ ExternalEEPROM EEPROM;
 
 void EEStore::init() {
 #if defined(ARDUINO_ARCH_SAMC)
-  EEPROM.begin(0x50);  // Address for Microchip 24-series EEPROM with all three
-                       // A pins grounded (0b1010000 = 0x50)
+  EEPROM.begin(0x50); // Address for Microchip 24-series EEPROM with all three
+                      // A pins grounded (0b1010000 = 0x50)
 #endif
 
   eeStore = (EEStore *)calloc(1, sizeof(EEStore));
 
-  EEPROM.get(0, eeStore->data);  // get eeStore data
+  EEPROM.get(0, eeStore->data); // get eeStore data
 
   // check to see that eeStore contains valid DCC++ ID
-  if (strncmp(eeStore->data.id, EESTORE_ID, sizeof(EESTORE_ID)) != 0) {  
+  if (strncmp(eeStore->data.id, EESTORE_ID, sizeof(EESTORE_ID)) != 0) {
     // if not, create blank eeStore structure (no
-    // turnouts, no sensors) and save it back to EEPROM  
-    strncpy(eeStore->data.id, EESTORE_ID, sizeof(EESTORE_ID)+0);  
+    // turnouts, no sensors) and save it back to EEPROM
+    strncpy(eeStore->data.id, EESTORE_ID, sizeof(EESTORE_ID) + 0);
     eeStore->data.nTurnouts = 0;
     eeStore->data.nSensors = 0;
     eeStore->data.nOutputs = 0;
     EEPROM.put(0, eeStore->data);
   }
 
-  reset();          // set memory pointer to first free EEPROM space
-  Turnout::load();  // load turnout definitions
-  Sensor::load();   // load sensor definitions
-  Output::load();   // load output definitions
+  reset();         // set memory pointer to first free EEPROM space
+  Turnout::load(); // load turnout definitions
+  Sensor::load();  // load sensor definitions
+  Output::load();  // load output definitions
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 void EEStore::clear() {
   sprintf(eeStore->data.id,
-          EESTORE_ID);  // create blank eeStore structure (no turnouts, no
-                        // sensors) and save it back to EEPROM
+          EESTORE_ID); // create blank eeStore structure (no turnouts, no
+                       // sensors) and save it back to EEPROM
   eeStore->data.nTurnouts = 0;
   eeStore->data.nSensors = 0;
   eeStore->data.nOutputs = 0;

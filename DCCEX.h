@@ -3,7 +3,7 @@
  *  © 2020-2021 Harald Barth
  *  © 2020-2021 Chris Harlow
  *  All rights reserved.
- *  
+ *
  *  This file is part of CommandStation-EX
  *
  *  This is free software: you can redistribute it and/or modify
@@ -21,16 +21,16 @@
  */
 
 // This include is intended to visually simplify the .ino for the end users.
-// If there were any #ifdefs required they are much better handled in here.  
+// If there were any #ifdefs required they are much better handled in here.
 
 #ifndef DCCEX_h
 #define DCCEX_h
 
-#include "defines.h"
 #include "DCC.h"
-#include "DIAG.h"
 #include "DCCEXParser.h"
+#include "DIAG.h"
 #include "SerialManager.h"
+#include "defines.h"
 #include "version.h"
 #ifndef ARDUINO_ARCH_ESP32
 #include "WifiInterface.h"
@@ -40,15 +40,15 @@
 #if ETHERNET_ON == true
 #include "EthernetInterface.h"
 #endif
-#include "Display_Implementation.h"
-#include "LCN.h"
-#include "IODevice.h"
-#include "Turnouts.h"
-#include "Sensors.h"
-#include "Outputs.h"
 #include "CommandDistributor.h"
-#include "TrackManager.h"
-#include "DCCTimer.h"    
+#include "DCCTimer.h"
+#include "Display_Implementation.h"
 #include "EXRAIL.h"
-    
+#include "IODevice.h"
+#include "LCN.h"
+#include "Outputs.h"
+#include "Sensors.h"
+#include "TrackManager.h"
+#include "Turnouts.h"
+
 #endif

@@ -20,8 +20,8 @@
 #ifndef I2CMANAGER_MEGA4809_H
 #define I2CMANAGER_MEGA4809_H
 
-#include <Arduino.h>
 #include "I2CManager.h"
+#include <Arduino.h>
 
 /***************************************************************************
  *  Set I2C clock speed register.
@@ -39,18 +39,19 @@ void I2CManagerClass::I2C_setClock(unsigned long i2cClockSpeed) {
     TWI0.CTRLA |= TWI_FMPEN_bm;
   else
     TWI0.CTRLA &= ~TWI_FMPEN_bm;
-  
-  uint32_t baud = (F_CPU_CORRECTED / i2cClockSpeed - F_CPU_CORRECTED / 1000 / 1000
-    * t_rise / 1000 - 10) / 2;
-  if (baud > 255) baud = 255;  // ~30kHz
+
+  uint32_t baud = (F_CPU_CORRECTED / i2cClockSpeed -
+                   F_CPU_CORRECTED / 1000 / 1000 * t_rise / 1000 - 10) /
+                  2;
+  if (baud > 255)
+    baud = 255; // ~30kHz
   TWI0.MBAUD = (uint8_t)baud;
 }
 
 /***************************************************************************
  *  Initialise I2C registers.
  ***************************************************************************/
-void I2CManagerClass::I2C_init()
-{ 
+void I2CManagerClass::I2C_init() {
   pinMode(PIN_WIRE_SDA, INPUT_PULLUP);
   pinMode(PIN_WIRE_SCL, INPUT_PULLUP);
   PORTMUX.TWISPIROUTEA |= TWI_MUX;
@@ -72,7 +73,8 @@ void I2CManagerClass::I2C_sendStart() {
   rxCount = 0;
 
   // If anything to send, initiate write.  Otherwise initiate read.
-  if (operation == OPERATION_READ || ((operation == OPERATION_REQUEST) && !bytesToSend))
+  if (operation == OPERATION_READ ||
+      ((operation == OPERATION_REQUEST) && !bytesToSend))
     TWI0.MADDR = (currentRequest->i2cAddress << 1) | 1;
   else
     TWI0.MADDR = (currentRequest->i2cAddress << 1) | 0;
@@ -81,31 +83,29 @@ void I2CManagerClass::I2C_sendStart() {
 /***************************************************************************
  *  Initiate a stop bit for transmission.
  ***************************************************************************/
-void I2CManagerClass::I2C_sendStop() {
-  TWI0.MCTRLB = TWI_MCMD_STOP_gc;
-}
+void I2CManagerClass::I2C_sendStop() { TWI0.MCTRLB = TWI_MCMD_STOP_gc; }
 
 /***************************************************************************
  *  Close I2C down
  ***************************************************************************/
 void I2CManagerClass::I2C_close() {
 
-  TWI0.MCTRLA &= ~(TWI_RIEN_bm | TWI_WIEN_bm | TWI_ENABLE_bm);        // Switch off I2C
+  TWI0.MCTRLA &= ~(TWI_RIEN_bm | TWI_WIEN_bm | TWI_ENABLE_bm); // Switch off I2C
   TWI0.MSTATUS = TWI_BUSSTATE_UNKNOWN_gc;
-  delayMicroseconds(10);  // Wait for things to stabilise (hopefully)
+  delayMicroseconds(10); // Wait for things to stabilise (hopefully)
 }
 
 /***************************************************************************
  *  Main state machine for I2C, called from interrupt handler.
  ***************************************************************************/
 void I2CManagerClass::I2C_handleInterrupt() {
-  
+
   uint8_t currentStatus = TWI0.MSTATUS;
 
   if (currentStatus & TWI_ARBLOST_bm) {
     // Arbitration lost, restart
     TWI0.MSTATUS = currentStatus; // clear all flags
-    I2C_sendStart();   // Reinitiate request
+    I2C_sendStart();              // Reinitiate request
   } else if (currentStatus & TWI_BUSERR_bm) {
     // Bus error
     completionStatus = I2C_STATUS_BUS_ERROR;
@@ -124,7 +124,8 @@ void I2CManagerClass::I2C_handleInterrupt() {
       TWI0.MDATA = sendBuffer[txCount++];
       bytesToSend--;
     } else if (bytesToReceive) {
-      // Last sent byte acked and no more to send.  Send repeated start, address and read bit.
+      // Last sent byte acked and no more to send.  Send repeated start, address
+      // and read bit.
       TWI0.MADDR = (deviceAddress << 1) | 1;
     } else {
       // No more data to send/receive. Initiate a STOP condition.
@@ -134,9 +135,9 @@ void I2CManagerClass::I2C_handleInterrupt() {
   } else if (currentStatus & TWI_RIF_bm) {
     // Master read completed without errors
     if (bytesToReceive) {
-      receiveBuffer[rxCount++] = TWI0.MDATA;  // Store received byte
+      receiveBuffer[rxCount++] = TWI0.MDATA; // Store received byte
       bytesToReceive--;
-    } 
+    }
     if (bytesToReceive) {
       // More bytes to receive, issue ack and start another read
       TWI0.MCTRLB = TWI_MCMD_RECVTRANS_gc;
@@ -148,12 +149,9 @@ void I2CManagerClass::I2C_handleInterrupt() {
   }
 }
 
-
 /***************************************************************************
  *  Interrupt handler.
  ***************************************************************************/
-ISR(TWI0_TWIM_vect) {
-  I2CManager.handleInterrupt();
-}
+ISR(TWI0_TWIM_vect) { I2CManager.handleInterrupt(); }
 
 #endif

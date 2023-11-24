@@ -27,7 +27,7 @@
 class DisplayInterface : public Print {
 protected:
   static DisplayInterface *_displayHandler;
-  static uint8_t _selectedDisplayNo;  // Nothing selected.
+  static uint8_t _selectedDisplayNo; // Nothing selected.
   DisplayInterface *_nextHandler = NULL;
   uint8_t _displayNo = 0;
 
@@ -38,15 +38,12 @@ public:
     _displayHandler = this;
     _displayNo = displayNo;
   }
-  static DisplayInterface *getDisplayHandler() {
-    return _displayHandler;
-  }
-  uint8_t getDisplayNo() {
-    return _displayNo;
-  }
+  static DisplayInterface *getDisplayHandler() { return _displayHandler; }
+  uint8_t getDisplayNo() { return _displayNo; }
 
-  // The next functions are to provide compatibility with calls to the LCD function
-  // which does not specify a display number.  These always apply to display '0'.
+  // The next functions are to provide compatibility with calls to the LCD
+  // function which does not specify a display number.  These always apply to
+  // display '0'.
   static void refresh() { refresh(0); };
   static void setRow(uint8_t line) { setRow(0, line); };
   static void clear() { clear(0); };
@@ -54,32 +51,39 @@ public:
   // Additional functions to support multiple displays.  These perform a
   // multicast to all displays that match the selected displayNo.
   // Display number zero is the default one.
-  static void setRow(uint8_t displayNo, uint8_t line) { 
+  static void setRow(uint8_t displayNo, uint8_t line) {
     _selectedDisplayNo = displayNo;
-    for (DisplayInterface *p = _displayHandler; p!=0; p=p->_nextHandler) { 
-      if (displayNo == p->_displayNo) p->_setRow(line);
+    for (DisplayInterface *p = _displayHandler; p != 0; p = p->_nextHandler) {
+      if (displayNo == p->_displayNo)
+        p->_setRow(line);
     }
   }
-  size_t write (uint8_t c) override {
-    for (DisplayInterface *p = _displayHandler; p!=0; p=p->_nextHandler) 
-      if (_selectedDisplayNo == p->_displayNo) p->_write(c);
+  size_t write(uint8_t c) override {
+    for (DisplayInterface *p = _displayHandler; p != 0; p = p->_nextHandler)
+      if (_selectedDisplayNo == p->_displayNo)
+        p->_write(c);
     return _displayHandler ? 1 : 0;
   }
-  static void clear(uint8_t displayNo) { 
-    for (DisplayInterface *p = _displayHandler; p!=0; p=p->_nextHandler) 
-      if (displayNo == p->_displayNo) p->_clear();
+  static void clear(uint8_t displayNo) {
+    for (DisplayInterface *p = _displayHandler; p != 0; p = p->_nextHandler)
+      if (displayNo == p->_displayNo)
+        p->_clear();
   }
   static void refresh(uint8_t displayNo) {
-    for (DisplayInterface *p = _displayHandler; p!=0; p=p->_nextHandler)
-      if (displayNo == p->_displayNo) p->_refresh();
+    for (DisplayInterface *p = _displayHandler; p != 0; p = p->_nextHandler)
+      if (displayNo == p->_displayNo)
+        p->_refresh();
   }
   static void loop() {
-    for (DisplayInterface *p = _displayHandler; p!=0; p=p->_nextHandler) 
+    for (DisplayInterface *p = _displayHandler; p != 0; p = p->_nextHandler)
       p->_displayLoop();
   };
   // The following are overridden within the specific device class
-  virtual void begin() {};
-  virtual size_t _write(uint8_t c) { (void)c; return 0; };
+  virtual void begin(){};
+  virtual size_t _write(uint8_t c) {
+    (void)c;
+    return 0;
+  };
   virtual void _setRow(uint8_t line) { (void)line; }
   virtual void _clear() {}
   virtual void _refresh() {}
