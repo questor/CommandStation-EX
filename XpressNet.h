@@ -2,11 +2,12 @@
 #ifndef XpressNet_h
 #define XpressNet_h
 
-#include "RingStream.h"
-
 struct XpressNet {
+  static void init();
 
-  static void parse(Print *stream, byte *command, RingStream *ringStream);
+  static void loop();
+
+private:
 };
 
 #endif

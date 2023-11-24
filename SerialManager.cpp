@@ -81,16 +81,14 @@ void SerialManager::init() {
     // SerialBT.setPin("6666"); // choose other pin
     uint64_t chipid = ESP.getEfuseMac();
     char idstr[16] = {0};
-    snprintf(idstr, 15, "DCCEX-%08X",
-             __builtin_bswap32((uint32_t)(chipid >> 16)));
+    snprintf(idstr, 15, "DCCEX-%08X", __builtin_bswap32((uint32_t)(chipid >> 16)));
     SerialBT.begin(idstr);
     new SerialManager(&SerialBT);
     delay(1000);
   }
 #endif
 #ifdef SABERTOOTH
-  Serial2.begin(9600, SERIAL_8N1, 16,
-                17); // GPIO 16 RXD2; GPIO 17 TXD2 on ESP32
+  Serial2.begin(9600, SERIAL_8N1, 16, 17); // GPIO 16 RXD2; GPIO 17 TXD2 on ESP32
 #endif
 }
 
