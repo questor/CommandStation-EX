@@ -275,7 +275,6 @@ void DCCEXParser::parse(const FSH * cmd) {
 }
 
 // See documentation on DCC class for info on this section
-
 void DCCEXParser::parse(Print *stream,  byte *com,  RingStream *ringStream) {
   // This function can get stings of the form "<C OMM AND>" or "C OMM AND"
   // found is true first after the leading "<" has been passed
@@ -283,7 +282,7 @@ void DCCEXParser::parse(Print *stream,  byte *com,  RingStream *ringStream) {
   for (byte *c=com; c[0] != '\0'; c++) {
     if (found) {
       parseOne(stream, c,  ringStream);
-      found=false;
+      found = false;
     }
     if (c[0] == '<')
       found = true;
@@ -323,8 +322,7 @@ void DCCEXParser::parseOne(Print *stream, byte *com, RingStream * ringStream)
         int16_t slot=DCC::lookupSpeedTable(p[0],false);
         if (slot>=0) {
             DCC::LOCO * sp=&DCC::speedTable[slot];
-            StringFormatter::send(stream,F("<l %d %d %d %l>\n"),
-			sp->loco,slot,sp->speedCode,sp->functions);
+            StringFormatter::send(stream,F("<l %d %d %d %l>\n"),sp->loco,slot,sp->speedCode,sp->functions);
             }
         else // send dummy state speed 0 fwd no functions. 
             StringFormatter::send(stream,F("<l %d -1 128 0>\n"),p[0]);

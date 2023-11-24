@@ -25,6 +25,7 @@
 #include "CommandDistributor.h"
 #include "SerialManager.h"
 #include "WiThrottle.h"
+#include "XpressNet.h"
 #include "DIAG.h"
 #include "defines.h"
 #include "DCCWaveform.h"
@@ -61,7 +62,7 @@ template<typename... Targs> void CommandDistributor::broadcastReply(clientType t
 
 // Parse is called by Withrottle or Ethernet interface to determine which
 // protocol the client is using and call the appropriate part of dcc++Ex
-void  CommandDistributor::parse(byte clientId,byte * buffer, RingStream * stream) {
+void  CommandDistributor::parse(byte clientId,byte * buffer, RingStream * stream, byte forceProtocol = eForceNothing) {
   if (Diag::WIFI && Diag::CMD)
     DIAG(F("Parse C=%d T=%d B=%s"),clientId, clients[clientId], buffer);
   ring=stream;
@@ -72,10 +73,17 @@ void  CommandDistributor::parse(byte clientId,byte * buffer, RingStream * stream
   // client is using the DCC++ protocol where all commands start
   // with '<'
   if (clients[clientId] == NONE_TYPE) {
-    if (buffer[0] == '<')
-      clients[clientId]=COMMAND_TYPE;
-    else
-      clients[clientId]=WITHROTTLE_TYPE;
+    if(forceProtocol == eForceNothing) {
+      if (buffer[0] == '<')
+        clients[clientId] = COMMAND_TYPE;
+      else
+        clients[clientId] = WITHROTTLE_TYPE;  
+    } else {
+      if(forceProtocol == eForceXpressNet)
+        clients[clientId] = XPRESSNET_TYPE;
+      else
+        DIAG(F("FORCED PROTOCOL NOT DEFINED!"));
+    }
   }
 
   // mark buffer that is sent to parser
@@ -87,8 +95,10 @@ void  CommandDistributor::parse(byte clientId,byte * buffer, RingStream * stream
     DCCEXParser::parse(stream, buffer, ring);
   } else if (clients[clientId] == WITHROTTLE_TYPE) {
     WiThrottle::getThrottle(clientId)->parse(ring, buffer);
+  } else if (clients[clientId] == XPRESSNET_TYPE) {
+    XpressNet::parse(stream, buffer, ring);
   }
-
+  
   if (ring->peekTargetMark()!=RingStream::NO_CLIENT) {
     // The commit call will either write the length bytes
     // OR rollback to the mark because the reply is empty

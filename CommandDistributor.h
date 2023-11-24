@@ -36,7 +36,12 @@
 
 class CommandDistributor {
 public:
-  enum clientType: byte {NONE_TYPE,COMMAND_TYPE,WITHROTTLE_TYPE};
+  enum clientType: byte {
+    NONE_TYPE,
+    COMMAND_TYPE,
+    WITHROTTLE_TYPE,
+    XPRESSNET_TYPE,
+  };
 private:
   static void broadcastToClients(clientType type);
   static StringBuffer * broadcastBufferWriter;
@@ -45,7 +50,13 @@ private:
     static clientType clients[8];
   #endif
 public :
-  static void parse(byte clientId,byte* buffer, RingStream * ring);
+  
+  enum forceProtocolType: byte{
+    eForceNothing = 0,
+    eForceXpressNet = 1,
+  };
+
+  static void parse(byte clientId,byte* buffer, RingStream * ring, byte forceLenz = eForceNothing);
   static void broadcastLoco(byte slot);
   static void broadcastSensor(int16_t id, bool value);
   static void broadcastTurnout(int16_t id, bool isClosed);
