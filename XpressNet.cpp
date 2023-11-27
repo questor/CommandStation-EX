@@ -1,6 +1,8 @@
 
 #include "XpressNet.h"
 
+#include "DIAG.h"
+
 #define MAX485_CONTROL_PIN 9    //RS-485/422 Transceiver
 
 /*static*/ void XpressNet::init() {
@@ -18,6 +20,35 @@
     UCSR1B = (1<<RXEN1) | (1<<TXEN1) | (1<<RXCIE1) | (1<<UCSZ12);
     UCSR1C = (1<<UCSZ11) | (1<<UCSZ10);
     sei();
+}
+
+enum Msg {
+    eMaxLength = 10
+};
+
+static int currentWritePos = 0;
+const int maxNumberMessagesInBuffer = 8;
+static uint8_t tempReceiveBuffer[Msg::eMaxLength*maxNumberMessagesInBuffer];
+static int currentMsgWriteIndex = 0;
+static int currentMsgReadIndex = 0;
+
+void receiveMessages() {    //called from the interrupt (no heavy processing!)
+    int b = serialReceive();
+    if(b == -1) {   // bail out on error
+        return;
+    }
+    //the nineth bit marks if a new message starts or not
+    if(b >= 0x100) {
+        if(currentWritePos > 0) {   //is something already in the buffer which needs to be processed?
+
+        }
+        currentWritePos = 0;
+
+    }
+}
+
+ISR(USART1_RX_vect) {
+    receiveMessages();
 }
 
 int serialReceive() {
