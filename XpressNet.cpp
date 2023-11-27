@@ -84,14 +84,26 @@ void sendMessage(uint8_t count, uint8_t *bytes) {
     digitalWrite(MAX485_CONTROL_PIN, LOW);
 }
 
-/*static*/ void XpressNet::loop() {
 
-}
+// aa bb cd ee .. ff
+// aa bb - callbytes mit parity (bit 7 ist parity bit)
+// c - identification of request
+// d - Anzahl Bytes in Message ohne header und crc bytes
+//      cd -> Header
+// bis zu 15 datenbytes
+// ff - Checksumme (aa bb werden nicht mit reingerechnet, aber header; xor alles zusammen)
+// ee - message
+//  0x24 - Status Zentrale anfordern
+//  0x22 - Status Zentrale
+//  0x21 - Softwareversion anfordern
+//  
+
 
 /*
 Auszug Anmeldung LokMaus2
 
 Hier ein Auszug der Daten aus der Anmeldung einer LokMaus 2 am XpressNet-Bus:
+             x -> Nibble: anzahl bytes
 RX: 0x141 0x21 0x24 0x05 - Status Zentrale anfordern
 TX: 0x1E1 0x62 0x22 0x00 0x40 - Status Zentrale
 RX: 0x141 0x21 0x21 0x00 - Softwareversion anfordern
@@ -100,3 +112,10 @@ RX: 0x141 0xE3 0x00 0x00 0x04 0xE7 - Lokdaten anfordern
 TX: 0x1E1 0xE4 0x04 0x00 0x00 0x00 XOR - Normale Lokinfo
 
 */
+
+
+/*static*/ void XpressNet::loop() {
+
+}
+
+
