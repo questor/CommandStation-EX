@@ -40,7 +40,6 @@ public:
     NONE_TYPE,
     COMMAND_TYPE,
     WITHROTTLE_TYPE,
-    XPRESSNET_TYPE,
   };
 
 private:
@@ -56,8 +55,7 @@ public:
     eForceXpressNet = 1,
   };
 
-  static void parse(byte clientId, byte *buffer, RingStream *ring,
-                    byte forceLenz = eForceNothing);
+  static void parse(byte clientId, byte *buffer, RingStream *ring);
   static void broadcastLoco(byte slot);
   static void broadcastSensor(int16_t id, bool value);
   static void broadcastTurnout(int16_t id, bool isClosed);

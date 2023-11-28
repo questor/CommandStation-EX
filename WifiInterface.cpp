@@ -99,10 +99,12 @@ bool WifiInterface::setup(long serial_link_speed, const FSH *wifiESSID,
 #endif
 
 // See if the WiFi is attached to the first serial port
+#if 0
 #if NUM_SERIAL > 0 && !defined(SERIAL1_COMMANDS)
   SERIAL1.begin(serial_link_speed);
   wifiUp =
       setup(SERIAL1, wifiESSID, wifiPassword, hostname, port, channel, forceAP);
+#endif
 #endif
 
 // Other serials are tried, depending on hardware.

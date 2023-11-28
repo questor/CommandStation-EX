@@ -113,6 +113,7 @@ void setup()
   // Start RMFT aka EX-RAIL (ignored if no automnation)
   RMFT::begin();
 
+  XpressNet::init();
 
   // Invoke any DCC++EX commands in the form "SETUP("xxxx");"" found in optional file mySetup.h.
   //  This can be used to create turnouts, outputs, sensors etc. through the normal text commands.
@@ -156,6 +157,8 @@ void loop()
 #endif
 
   RMFT::loop();  // ignored if no automation
+
+  XpressNet::loop();
 
   #if defined(LCN_SERIAL)
   LCN::loop();

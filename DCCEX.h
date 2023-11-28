@@ -50,5 +50,6 @@
 #include "Sensors.h"
 #include "TrackManager.h"
 #include "Turnouts.h"
+#include "XpressNet.h"
 
 #endif
