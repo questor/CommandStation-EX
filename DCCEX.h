@@ -51,5 +51,6 @@
 #include "TrackManager.h"
 #include "Turnouts.h"
 #include "XpressNet.h"
+#include "XpressNetMaster.h"
 
 #endif

@@ -1,4 +1,5 @@
 
+#if 0
 #ifndef XpressNet_h
 #define XpressNet_h
 
@@ -9,5 +10,7 @@ struct XpressNet {
 
 private:
 };
+
+#endif
 
 #endif

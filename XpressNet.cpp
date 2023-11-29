@@ -1,4 +1,6 @@
 
+#if 0
+
 #include "XpressNet.h"
 
 #include "DIAG.h"
@@ -159,3 +161,4 @@ void sendMessage(uint8_t count, uint8_t *bytes) {
 }
 
 
+#endif

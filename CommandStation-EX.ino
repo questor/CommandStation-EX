@@ -66,6 +66,8 @@
 #warning You have myAutomation.h but your hardware has not enough memory to do that, so EX-RAIL DISABLED
 #endif
 
+XpressNetMasterClass gXpressNetMaster;
+
 void setup()
 {
   // The main sketch has responsibilities during setup()
@@ -113,7 +115,8 @@ void setup()
   // Start RMFT aka EX-RAIL (ignored if no automnation)
   RMFT::begin();
 
-  XpressNet::init();
+  //XpressNet::init();
+  gXpressNetMaster.setup(Loco128, 9);
 
   // Invoke any DCC++EX commands in the form "SETUP("xxxx");"" found in optional file mySetup.h.
   //  This can be used to create turnouts, outputs, sensors etc. through the normal text commands.
@@ -158,7 +161,8 @@ void loop()
 
   RMFT::loop();  // ignored if no automation
 
-  XpressNet::loop();
+  //XpressNet::loop();
+  gXpressNetMaster.update();
 
   #if defined(LCN_SERIAL)
   LCN::loop();
