@@ -193,9 +193,7 @@ class XpressNetMasterClass
 	static inline void handle_RX_interrupt();		//Serial RX Interrupt bearbeiten
 	static inline void handle_TX_interrupt();		//Serial TX Interrupt bearbeiten
 	
-  // library-accessible "private" interface
-  private:
-	  //Variables:
+private:
 	bool XModeAuto;		//ON = Automatische Umschaltung Master/Slave-Mode; OFF = Slave Mode only
 	uint8_t XNetSlaveMode;	// > 0 then we are working in SLAVE MODE
 	uint8_t XNetSlaveInit;	//send initialize sequence
@@ -225,13 +223,13 @@ class XpressNetMasterClass
 	void XNetAnalyseReceived(void);		//work on received data
 	
 		//Serial send and receive:
-	#if defined(__AVR__)	
+#if defined(__AVR__)
 	static XpressNetMasterClass *active_object;	//aktuelle aktive Object for interrupt handler	
-	#endif
+#endif
 	
 	XNetBuffer XNetTXBuffer;
 		
-   	void XNetsend(byte *dataString, byte byteCount);	//Sende Datenarray out NOW!
+ 	void XNetsend(byte *dataString, byte byteCount);	//Sende Datenarray out NOW!
 	uint16_t XNetReadBuffer(void);	//read out next Buffer Data
 	void getXOR (uint8_t *data, byte length); // calculate the XOR
 	void XNetSendData(void);	//Sendet Daten aus dem Buffer mittels Interrupt

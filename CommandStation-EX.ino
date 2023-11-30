@@ -116,7 +116,7 @@ void setup()
   RMFT::begin();
 
   //XpressNet::init();
-  gXpressNetMaster.setup(Loco128, 9);
+  gXpressNetMaster.setup(Loco128, 7);
 
   // Invoke any DCC++EX commands in the form "SETUP("xxxx");"" found in optional file mySetup.h.
   //  This can be used to create turnouts, outputs, sensors etc. through the normal text commands.

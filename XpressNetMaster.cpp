@@ -1161,19 +1161,6 @@ void XpressNetMasterClass::XNetsend(byte *dataString, byte byteCount) {
 			XNetSerial.print("XTX: ");
 		}
 		#endif
-
-			char tmp[128];
-			int wPos = 0;
-			char *c = "0123456789ABCDEF";
-			for (byte i = 0; i < byteCount; i++) {
-				byte d = dataString[i];
-				tmp[wPos++] = c[(d&0xf0)>>4];
-				tmp[wPos++] = c[d&0xf];
-				tmp[wPos++] = ' ';
-			}
-			tmp[wPos] = 0;
-			DIAG(F("WRITE %s"), &tmp[0]);
-
 		
 		XNetTXBuffer.msg[XNetTXBuffer.put].length = byteCount;
 		
